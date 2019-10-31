@@ -1,2 +1,3 @@
-# elasticsearch
-Elasticsearch
+# Elasticsearch
+
+Utils for connecting with Elasticsearch
