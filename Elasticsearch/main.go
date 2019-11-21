@@ -96,6 +96,19 @@ func (g *ElasticClient) SafeIndex(id string, document interface{}, index string)
 	return put1.Id, nil
 }
 
+func (g *ElasticClient) DeleteByID(id string, index string) error {
+	ctx := context.Background()
+	_, err := g.ElasticObject.Delete().
+		Index(index).
+		Id(id).
+		Do(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (g *ElasticClient) GetByID(id string, marshalTo interface{}, index string) (interface{}, error) {
 	ctx := context.Background()
 	elasticValue, elasticErr := g.ElasticObject.Get().Index(index).Id(id).Do(ctx)
