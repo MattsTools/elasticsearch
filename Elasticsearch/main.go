@@ -82,12 +82,21 @@ func (g *ElasticClient) SafeIndex(id string, document interface{}, index string)
 		}
 	}
 
+	marshalled, marshalErr := json.Marshal(document)
+
+	if marshalErr != nil {
+		return "", marshalErr
+	}
+
+	stringMarshal := string(marshalled)
+	fmt.Println(stringMarshal)
+
 	// Index a tweet (using JSON serialization)
 	put1, err := g.ElasticObject.Index().
 		Index(index).
 		Type(index).
 		Id(id).
-		BodyJson(document).
+		BodyString(stringMarshal).
 		Do(ctx)
 	if err != nil {
 		return "", err
