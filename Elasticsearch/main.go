@@ -125,3 +125,19 @@ func (g *ElasticClient) Search(index string, field string, searchTerm string, ma
 
 	return searchResult.Each(reflect.TypeOf(marshalTo)), nil
 }
+
+func (g *ElasticClient) SearchByLocation(index string, field string, distance string, lat float64, lon float64, marshalTo interface{}) ([]interface{}, error) {
+	locQuery := elastic.NewGeoDistanceQuery(field).Lat(lat).Lon(lon).Distance(distance)
+
+	searchResult, err := g.ElasticObject.Search().
+		Index(index).
+		Query(locQuery).
+		From(0).
+		Size(10).Do(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return searchResult.Each(reflect.TypeOf(marshalTo)), nil
+}
