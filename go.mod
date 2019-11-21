@@ -1,4 +1,4 @@
-module github.com/mattstools/dynamodb
+module github.com/mattstools/elasticsearch
 
 go 1.12
 
