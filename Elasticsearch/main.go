@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/aws/signer/v4"
-	"github.com/olivere/elastic"
+	"github.com/olivere/elastic/v7"
 	"github.com/sha1sum/aws_signing_client"
 	"net/http"
 	"reflect"
@@ -94,7 +94,6 @@ func (g *ElasticClient) SafeIndex(id string, document interface{}, index string)
 	// Index a tweet (using JSON serialization)
 	put1, err := g.ElasticObject.Index().
 		Index(index).
-		Type("_doc").
 		Id(id).
 		BodyString(stringMarshal).
 		Do(ctx)
@@ -125,7 +124,7 @@ func (g *ElasticClient) GetByID(id string, marshalTo interface{}, index string) 
 		return nil, elasticErr
 	}
 
-	marshalErr := json.Unmarshal([]byte(*elasticValue.Source), marshalTo)
+	marshalErr := json.Unmarshal([]byte(elasticValue.Source), marshalTo)
 	if marshalErr != nil {
 		return nil, marshalErr
 	}
