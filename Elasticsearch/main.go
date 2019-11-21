@@ -94,7 +94,7 @@ func (g *ElasticClient) SafeIndex(id string, document interface{}, index string)
 	// Index a tweet (using JSON serialization)
 	put1, err := g.ElasticObject.Index().
 		Index(index).
-		Type(index).
+		Type("_doc").
 		Id(id).
 		BodyString(stringMarshal).
 		Do(ctx)
