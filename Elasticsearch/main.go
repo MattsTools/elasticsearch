@@ -162,3 +162,22 @@ func (g *ElasticClient) SearchByLocation(index string, field string, distance st
 
 	return searchResult.Each(reflect.TypeOf(marshalTo)), nil
 }
+
+func (g *ElasticClient) SearchByLocationAndTime(index string, geoField string, timeField string, distance string, lat float64, lon float64, gte int64, marshalTo interface{}) ([]interface{}, error) {
+	locQuery := elastic.NewGeoDistanceQuery(geoField).Lat(lat).Lon(lon).Distance(distance)
+	timeQuery := elastic.NewRangeQuery(timeField).Gte(gte)
+
+	multiQuery := elastic.NewBoolQuery().Must(locQuery).Must(timeQuery)
+
+	searchResult, err := g.ElasticObject.Search().
+		Index(index).
+		Query(multiQuery).
+		From(0).
+		Size(10).Do(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return searchResult.Each(reflect.TypeOf(marshalTo)), nil
+}
