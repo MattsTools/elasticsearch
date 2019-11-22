@@ -96,6 +96,7 @@ func (g *ElasticClient) SafeIndex(id string, document interface{}, index string)
 		Index(index).
 		Id(id).
 		BodyString(stringMarshal).
+		Refresh("wait_for").
 		Do(ctx)
 	if err != nil {
 		return "", err
